@@ -7,7 +7,12 @@ export default async (request: Request, response: Response) => {
 
     const res = await flutterwaveVAS.get(`/bill/product/${billerCode}`);
 
-    return response.status(200).json(res.data);
+    const { status, data } = res.data;
+    if (status === "success") {
+      return response.status(200).json(data.products);
+    } else {
+      return response.status(400).json({ message: "Could not fetch products" });
+    }
   } catch (error) {
     return response.status(500).json(error);
   }
