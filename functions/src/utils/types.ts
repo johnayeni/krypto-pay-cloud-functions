@@ -76,7 +76,8 @@ export interface BushaPayChargePayload {
   redirect_url: string;
   cancel_url: string;
   metadata: {
-    customer_id: string;
+    user_id: string;
+    service_customer_id: string;
     biller_code: string;
     product_code: string;
     amount: string;
@@ -116,7 +117,7 @@ export interface Transaction {
   hosted_url: string;
   code: string;
   payment_reference: string;
-  user_id: string;
+  user_id: string | number;
   status: string;
 }
 
@@ -127,4 +128,6 @@ export interface Payment {
   flw_reference: string;
   biller_code: string;
   product_code: string;
+  service_customer_id: string | number;
+  user_id: string | number;
 }

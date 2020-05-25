@@ -23,7 +23,7 @@ export default async (
         billercode: event.data.metadata.biller_code,
         productcode: event.data.metadata.product_code,
         amount: event.data.pricing.local.value,
-        customerid: event.data.metadata.customer_id,
+        customerid: event.data.metadata.service_customer_id,
         transactionreference: event.data.code,
       };
 
@@ -53,6 +53,8 @@ export default async (
           flw_reference,
           biller_code,
           product_code,
+          user_id: event.data.metadata.user_id,
+          service_customer_id: event.data.metadata.service_customer_id,
         };
 
         await payments().doc(paymentId).set(payment);

@@ -14,25 +14,27 @@ firebaseAdmin.initializeApp();
 
 const app = express();
 app.use(cors({ origin: true }));
-const main = app;
-main.use(auth);
+app.use(auth);
 
-const services = main;
+const webhook = express();
+webhook.use(cors({ origin: true }));
+
+const services = app;
 services.get("/", getServicesRequest);
 exports.services = functions.https.onRequest(services);
 
-const service = main;
+const service = app;
 service.get("/:serviceCode/billers", getBillersRequest);
 exports.service = functions.https.onRequest(service);
 
-const biller = main;
+const biller = app;
 biller.get("/:billerCode/products", getProductsRequest);
 exports.biller = functions.https.onRequest(biller);
 
-const transaction = main;
+const transaction = app;
 transaction.post("/", createTransactionRequest);
 exports.transaction = functions.https.onRequest(transaction);
 
-const payment = app;
+const payment = webhook;
 payment.post("/webhook", paymentWebhook);
 exports.payment = functions.https.onRequest(payment);

@@ -18,7 +18,7 @@ export default async (request: Request, response: Response) => {
         billerCode,
         productCode,
         amount,
-        phoneNumber,
+        serviceCustomerId,
         description,
       } = request.body;
 
@@ -31,7 +31,8 @@ export default async (request: Request, response: Response) => {
         redirect_url: "https://example.com",
         cancel_url: "https://goal.com",
         metadata: {
-          customer_id: phoneNumber,
+          user_id: user.uid,
+          service_customer_id: serviceCustomerId,
           biller_code: billerCode,
           product_code: productCode,
           amount: amount,
