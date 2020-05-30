@@ -1,3 +1,5 @@
+type country = "NG" | "GH" | "US" | "KE";
+
 interface BushaPayPayment {
   created_at: string;
   network: string;
@@ -18,6 +20,16 @@ interface BushaPayTimeline {
   time: string;
   status: string;
   context: any;
+}
+
+interface BushaPayMetaData {
+  email: string;
+  service_customer_id: string;
+  biller_code: string;
+  item_code: string;
+  service_name: string;
+  amount: string;
+  country: country;
 }
 
 export interface BushaPayChargeResponse {
@@ -42,9 +54,7 @@ export interface BushaPayChargeResponse {
     confirmed_at?: string;
     timeline: BushaPayTimeline[];
     payments: BushaPayPayment[];
-    metadata: {
-      [key: string]: string | number;
-    };
+    metadata: BushaPayMetaData;
   };
 }
 
@@ -68,66 +78,52 @@ export interface BushaPayWebhookPayload {
 }
 
 export interface BushaPayChargePayload {
-  description: string;
   local_price: {
     amount: string;
     currency: string;
   };
   redirect_url: string;
   cancel_url: string;
-  metadata: {
-    user_id: string;
-    service_customer_id: string;
-    biller_code: string;
-    product_code: string;
-    amount: string;
-  };
+  metadata: BushaPayMetaData;
 }
 
-export interface FlutterwaveVasPaymentResponse {
-  data?: {
-    date: string;
-    amount: string;
-    balance: string;
-    transaction_reference: string;
-    response_code: string;
-    response_message: string;
-    flw_reference: string;
-    biller_code: string;
-    product_code: string;
-  };
-  description: string;
+export interface FlutterwavePaymentResponse {
+  message: string;
   status: string;
+  data?: {
+    phone_number: string;
+    amount: number | string;
+    network: string;
+    flw_ref: string;
+    tx_ref: string;
+  };
 }
 
-export interface FlutterwaveVasPaymentPayload {
-  billercode: string;
-  productcode: string;
-  amount: string;
-  customerid: string;
-  transactionreference: string;
+export interface FlutterwavePaymentPayload {
+  country: country;
+  customer: string;
+  amount: number | string;
+  recurrence: "ONCE";
+  type: string;
+  reference: string;
 }
 
 export interface Transaction {
-  description: string;
-  fiat_currency: string;
-  fiat_amount: string;
-  crypto_currency: string;
-  crypto_amount: string;
+  created: any;
+  currency: string;
+  amount: string;
   hosted_url: string;
   code: string;
   payment_reference: string;
-  user_id: string | number;
+  email: string;
   status: string;
 }
 
 export interface Payment {
-  date: string;
-  amount: string;
-  transaction_reference: string;
-  flw_reference: string;
-  biller_code: string;
-  product_code: string;
+  created: any;
+  amount: string | number;
+  tx_ref: string;
+  flw_ref: string;
   service_customer_id: string | number;
-  user_id: string | number;
+  email: string;
 }
