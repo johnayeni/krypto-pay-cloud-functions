@@ -22,7 +22,7 @@ const validator = [
   check("serviceCustomerId").notEmpty(),
   check("amount")
     .toInt()
-    .isInt({ gt: 500 })
+    .isInt({ gt: 499 })
     .withMessage("Least amount that can be processed is N500"),
   check("country")
     .isIn(["NG", "GH", "US", "KE"])
