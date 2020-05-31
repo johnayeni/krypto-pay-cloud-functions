@@ -82,8 +82,8 @@ export interface BushaPayChargePayload {
     amount: string;
     currency: string;
   };
-  redirect_url: string;
-  cancel_url: string;
+  redirect_url?: string;
+  cancel_url?: string;
   metadata: BushaPayMetaData;
 }
 
