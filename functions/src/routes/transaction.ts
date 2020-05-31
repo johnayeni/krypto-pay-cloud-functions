@@ -72,7 +72,7 @@ export default router.post(
           currency: "NGN",
         },
         // redirect_url: "https://example.com",
-        cancel_url: "https://kyrpto-pay.netlify.com/buy",
+        cancel_url: "https://krypto-pay.netlify.com/buy",
         metadata: {
           email,
           service_customer_id: serviceCustomerId,
