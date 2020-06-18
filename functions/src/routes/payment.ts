@@ -4,11 +4,10 @@ import * as firebaseAdmin from "firebase-admin";
 import flutterwave from "../utils/flutterwave";
 import transactions from "../database/transactions";
 import payments from "../database/payments";
+import asyncWrap from "../utils/async-wrap";
 
-import { AxiosResponse } from "axios";
 import {
   BushaPayWebhookPayload,
-  FlutterwavePaymentResponse,
   FlutterwavePaymentPayload,
   Payment,
 } from "../utils/types";
@@ -43,21 +42,25 @@ export default router.post(
         reference: event.data.code,
       };
 
-      const res: AxiosResponse<FlutterwavePaymentResponse> = await flutterwave.post(
-        `/v3/bills`,
-        payload
+      const [err, res] = await asyncWrap(
+        flutterwave.post(`/v3/bills`, payload)
       );
 
-      const { data, status } = res.data;
-
-      if (status !== "success" || !data) {
+      if (err || res?.data?.status !== "success" || !res?.data?.data) {
         await transactions().doc(transactionId).update({
-          status,
+          status: "payment_failed",
         });
 
-        response.status(200).end();
+        const queue = firebaseAdmin
+          .database()
+          .ref("queue/failed_payments/tasks");
+        queue.push({ transactionId, retries: 1 });
+
+        response.status(500).end();
         return;
       }
+
+      const { data } = res.data;
 
       const paymentId = data.flw_ref;
 
@@ -75,7 +78,7 @@ export default router.post(
       await payments().doc(paymentId).set(payment);
 
       await transactions().doc(transactionId).update({
-        status,
+        status: "payment_success",
         payment_reference: paymentId,
       });
 

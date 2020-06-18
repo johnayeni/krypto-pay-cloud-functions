@@ -1,0 +1,31 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /payments/{paymentId} {
+      allow read, write;
+      allow create: if request.resource.data.amount > 499 &&
+                      request.resource.data.amount is number &&
+                      request.resource.data.tx_ref != null &&
+                      request.resource.data.flw_ref != null &&
+                      request.resource.data.service_customer_id != null &&
+                      request.resource.data.email != null;
+      allow update: if false;
+    }
+    match /transactions/{transactionId} {
+      allow read, write;
+      allow create: if request.resource.data.currency != null &&
+                      request.resource.data.amount > 499 &&
+                      request.resource.data.amount is number &&
+                      request.resource.data.hosted_url != null &&
+                      request.resource.data.code != null &&
+                      request.resource.data.email != null &&
+                      request.resource.data.status != null;
+      allow update: if request.resource.data.currency == resource.data.currency &&
+                      request.resource.data.amount == resource.data.amount &&
+                      request.resource.data.hosted_url == resource.data.hosted_url &&
+                      request.resource.data.code == resource.data.code &&
+                      request.resource.data.email == resource.data.email &&
+                      request.resource.data.status != "payment_success";
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "kyrpto-pay-be",
+  "version": "1.0.0",
+  "description": "Backend for krypto pay",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "bash ./deploy.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnayeni/krypto-pay-cloud-functions.git"
+  },
+  "author": "John Ayeni",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/johnayeni/krypto-pay-cloud-functions/issues"
+  },
+  "homepage": "https://github.com/johnayeni/krypto-pay-cloud-functions#readme"
+}

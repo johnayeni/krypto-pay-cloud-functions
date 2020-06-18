@@ -68,10 +68,10 @@ export default router.post(
 
       const payload: BushaPayChargePayload = {
         local_price: {
-          amount: `${amount}`,
+          amount: `${amount + validateCustomer.data.data.fee}`,
           currency: "NGN",
         },
-        // redirect_url: "https://example.com",
+        redirect_url: "https://krypto-pay.netlify.com/buy",
         cancel_url: "https://krypto-pay.netlify.com/buy",
         metadata: {
           email,
@@ -79,7 +79,7 @@ export default router.post(
           biller_code: billerCode,
           item_code: itemCode,
           service_name: serviceName,
-          amount,
+          amount: amount + validateCustomer.data.data.fee,
           country,
         },
       };
