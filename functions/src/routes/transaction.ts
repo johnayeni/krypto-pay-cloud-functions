@@ -104,6 +104,7 @@ export default router.post(
         code: bushaPayReponse.data.data.code,
         payment_reference: "",
         email,
+        fees: validateCustomer.data.data.fee,
         status: "created",
       };
 

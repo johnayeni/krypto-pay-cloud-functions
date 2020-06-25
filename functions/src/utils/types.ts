@@ -112,6 +112,7 @@ export interface Transaction {
   created: any;
   currency: string;
   amount: string;
+  fees: string;
   hosted_url: string;
   code: string;
   payment_reference: string;

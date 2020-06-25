@@ -5,7 +5,7 @@ const CONFIG = functions.config().env;
 const BUSHA_API_KEY = CONFIG.bushaPay.key;
 // const BUSHA_WEBHOOK_SECRET = config.bushaPay.secret;
 
-const BASE_URL = "https://api.staging.pay.busha.co";
+const BASE_URL = "https://api.pay.busha.co";
 
 const bushaPay = axios.create({
   baseURL: BASE_URL,

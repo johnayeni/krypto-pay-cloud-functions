@@ -23,6 +23,8 @@ export default router.post(
     try {
       const { event } = request.body;
 
+      console.info("webhook payload", request.body);
+
       const transactionId = event.data.id;
 
       if (event.type !== "charge:completed") {
@@ -31,6 +33,7 @@ export default router.post(
           .doc(transactionId)
           .update({ status: currentTransactionStatus });
         response.status(200).end();
+        return;
       }
 
       const payload: FlutterwavePaymentPayload = {
@@ -50,26 +53,24 @@ export default router.post(
         await transactions().doc(transactionId).update({
           status: "payment_failed",
         });
-
-        const queue = firebaseAdmin
-          .database()
-          .ref("queue/failed_payments/tasks");
-        queue.push({ transactionId, retries: 1 });
-
+        if (err) {
+          console.error(new Error(err));
+        }
         response.status(500).end();
         return;
       }
 
+      console.info("payment response: ", res);
       const { data } = res.data;
 
       const paymentId = data.flw_ref;
 
-      const { amount, tx_ref, flw_ref } = data;
+      const { amount, reference, flw_ref } = data;
 
       const payment: Payment = {
         created: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
         amount,
-        tx_ref,
+        tx_ref: reference,
         flw_ref,
         email: event.data.metadata.email,
         service_customer_id: event.data.metadata.service_customer_id,
