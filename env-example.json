@@ -1,0 +1,9 @@
+{
+  "bushaPay": {
+    "key": "",
+    "secret": ""
+  },
+  "flutterwave": {
+    "token": ""
+  }
+}
