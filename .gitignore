@@ -65,6 +65,7 @@ node_modules/
 .env
 env.json
 env-local.json
+.runtimeConfig.json
 serviceAccountCredentials.json
 
 #MAC OS

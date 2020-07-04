@@ -2,11 +2,12 @@ import * as express from "express";
 import * as cors from "cors";
 import * as functions from "firebase-functions";
 import * as firebaseAdmin from "firebase-admin";
-// import auth from "./middleware/auth";
 
 import categoriesRoutes from "./routes/categories";
 import transactionRoutes from "./routes/transaction";
 import paymentRoutes from "./routes/payment";
+import sendEmail from "./utils/send-email";
+import { Payment } from "./utils/types";
 
 firebaseAdmin.initializeApp();
 
@@ -27,3 +28,10 @@ exports.transaction = functions.https.onRequest(transaction);
 const payment = webhook;
 payment.use(paymentRoutes);
 exports.payment = functions.https.onRequest(payment);
+
+exports.sendReceipt = functions.firestore
+  .document("payments/{paymentId}")
+  .onCreate((snap) => {
+    const data = snap.data() as Payment;
+    sendEmail({ ...data, type: "success" });
+  });

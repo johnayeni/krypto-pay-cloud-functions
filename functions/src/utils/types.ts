@@ -118,6 +118,8 @@ export interface Transaction {
   payment_reference: string;
   email: string;
   status: string;
+  service_customer_id?: string | number;
+  service: string;
 }
 
 export interface Payment {
@@ -126,5 +128,15 @@ export interface Payment {
   tx_ref: string;
   flw_ref: string;
   service_customer_id: string | number;
+  service: string;
   email: string;
+}
+
+export interface SendEmailPayload {
+  amount: string | number;
+  tx_ref?: string;
+  service_customer_id?: string | number;
+  service: string;
+  email: string;
+  type: "success" | "failure";
 }

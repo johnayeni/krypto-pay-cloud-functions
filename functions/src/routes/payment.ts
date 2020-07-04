@@ -73,6 +73,7 @@ export default router.post(
         tx_ref: reference,
         flw_ref,
         email: event.data.metadata.email,
+        service: event.data.metadata.service_name,
         service_customer_id: event.data.metadata.service_customer_id,
       };
 

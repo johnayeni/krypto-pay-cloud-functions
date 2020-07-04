@@ -105,6 +105,8 @@ export default router.post(
         payment_reference: "",
         email,
         fees: validateCustomer.data.data.fee,
+        service: serviceName,
+        service_customer_id: serviceCustomerId,
         status: "created",
       };
 

@@ -4,7 +4,8 @@
   "description": "Backend for krypto pay",
   "main": "index.js",
   "scripts": {
-    "deploy": "bash ./deploy.sh"
+    "deploy": "bash ./deploy.sh",
+    "dev": "bash ./development.sh"
   },
   "repository": {
     "type": "git",
