@@ -6,11 +6,7 @@ import transactions from "../database/transactions";
 import payments from "../database/payments";
 import asyncWrap from "../utils/async-wrap";
 
-import {
-  BushaPayWebhookPayload,
-  FlutterwavePaymentPayload,
-  Payment,
-} from "../utils/types";
+import { BushaPayWebhookPayload, FlutterwavePaymentPayload, Payment } from "../utils/types";
 
 const router = express.Router();
 
@@ -27,11 +23,16 @@ export default router.post(
 
       const transactionId = event.data.id;
 
+      const transaction = await transactions().doc(transactionId).get();
+
+      if (!transaction.exists) {
+        console.info("Non-existent transaction", transactionId);
+        response.status(400).end();
+      }
+
       if (event.type !== "charge:completed") {
         const [, currentTransactionStatus] = event.type.split(":");
-        await transactions()
-          .doc(transactionId)
-          .update({ status: currentTransactionStatus });
+        await transactions().doc(transactionId).update({ status: currentTransactionStatus });
         response.status(200).end();
         return;
       }
@@ -45,9 +46,7 @@ export default router.post(
         reference: event.data.code,
       };
 
-      const [err, res] = await asyncWrap(
-        flutterwave.post(`/v3/bills`, payload)
-      );
+      const [err, res] = await asyncWrap(flutterwave.post(`/v3/bills`, payload));
 
       if (err || res?.data?.status !== "success" || !res?.data?.data) {
         await transactions().doc(transactionId).update({

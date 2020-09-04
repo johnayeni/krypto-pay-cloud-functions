@@ -135,6 +135,7 @@ export interface Payment {
 export interface SendEmailPayload {
   amount: string | number;
   tx_ref?: string;
+  flw_ref: string;
   service_customer_id?: string | number;
   service: string;
   email: string;

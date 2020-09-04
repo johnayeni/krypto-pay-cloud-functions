@@ -20,8 +20,9 @@ export default function sendEmail(payload: SendEmailPayload) {
       template,
       "v:amount": payload.amount,
       "v:service": payload.service,
-      "v:service_customer_id": payload.service_customer_id,
+      "v:customer": payload.service_customer_id,
       "v:tx_ref": payload.tx_ref,
+      "v:flw_ref": payload.flw_ref,
     });
   } catch (error) {
     console.error(new Error(error));

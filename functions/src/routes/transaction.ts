@@ -7,11 +7,7 @@ import transactions from "../database/transactions";
 
 import { AxiosResponse } from "axios";
 import { check, validationResult } from "express-validator";
-import {
-  BushaPayChargeResponse,
-  BushaPayChargePayload,
-  Transaction,
-} from "../utils/types";
+import { BushaPayChargeResponse, BushaPayChargePayload, Transaction } from "../utils/types";
 
 const router = express.Router();
 
@@ -22,8 +18,8 @@ const validator = [
   check("serviceCustomerId").notEmpty(),
   check("amount")
     .toInt()
-    .isInt({ gt: 499 })
-    .withMessage("Least amount that can be processed is N500"),
+    .isInt({ gt: 100, lt: 35000 })
+    .withMessage("Cannot process transactions less than ₦ 100 or greater than ₦35,000"),
   check("country")
     .isIn(["NG", "GH", "US", "KE"])
     .withMessage("Cannot process transactions in this region yet"),
@@ -60,11 +56,19 @@ export default router.post(
         `/v3/bill-items/${itemCode}/validate?code=${billerCode}&customer=${serviceCustomerId}`
       );
 
-      if (
-        validateCustomer?.data?.status !== "success" ||
-        !validateCustomer.data.data
-      )
+      if (validateCustomer?.data?.status !== "success" || !validateCustomer.data.data)
         return response.status(400).json({ message: "Customer ID is invalid" });
+
+      const walletBalance = await flutterwave.get(`/v3/balances/NGN`);
+
+      if (
+        walletBalance?.data?.status !== "success" &&
+        walletBalance?.data?.data?.available_balance >
+          Number(amount) + Number(validateCustomer.data.data.fee) + 20000
+      ) {
+        console.info("Insufficient funds");
+        return response.status(400).json({ message: "Cannot process transactions at the moment" });
+      }
 
       const payload: BushaPayChargePayload = {
         local_price: {
@@ -90,9 +94,7 @@ export default router.post(
       );
 
       if (!bushaPayReponse?.data?.data?.id)
-        return response
-          .status(400)
-          .json({ message: "Could not process transaction" });
+        return response.status(400).json({ message: "Could not process transaction" });
 
       const transactionId = bushaPayReponse.data.data.id;
 
@@ -112,9 +114,7 @@ export default router.post(
 
       await transactions().doc(transactionId).set(transaction);
 
-      return response
-        .status(201)
-        .json({ transaction, customer: validateCustomer.data.data });
+      return response.status(201).json({ transaction, customer: validateCustomer.data.data });
     } catch (error) {
       return response.status(500).json(error);
     }
