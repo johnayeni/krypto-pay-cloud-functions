@@ -34,5 +34,7 @@ exports.payment = functions.https.onRequest(payment);
 
 exports.sendReceipt = functions.firestore.document("payments/{paymentId}").onCreate((snap) => {
   const data = snap.data() as Payment;
-  sendEmail({ ...data, type: "success" });
+  if (data.email) {
+    sendEmail({ ...data, type: "success" });
+  }
 });
