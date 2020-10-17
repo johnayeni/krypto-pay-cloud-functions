@@ -14,7 +14,7 @@ export default function sendEmail(payload: SendEmailPayload) {
     }
 
     mailgun.messages().send({
-      from: "no@reply <payments@peeerpay.app>",
+      from: "Peeerpay <no-reply@peeerpay.app>",
       to: payload.email,
       subject,
       template,
