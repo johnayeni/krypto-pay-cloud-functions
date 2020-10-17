@@ -1,5 +1,6 @@
 import * as express from "express";
 import flutterwave from "../utils/flutterwave";
+import { getCategoriesForCountry } from "../utils/helpers";
 
 const router = express.Router();
 
@@ -11,7 +12,9 @@ export default router.get("/", async (_, response: express.Response) => {
     if (status !== "success" || !data)
       return response.status(400).json({ message: "Could not fetch categories" });
 
-    return response.status(200).json(data);
+    const filteredCategories = getCategoriesForCountry(data, "NG");
+
+    return response.status(200).json(filteredCategories);
   } catch (error) {
     return response.status(500).json(error);
   }

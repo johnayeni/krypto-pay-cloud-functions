@@ -111,6 +111,7 @@ export interface FlutterwavePaymentPayload {
 export interface Transaction {
   created: any;
   currency: string;
+  country: string;
   amount: string;
   fees: string;
   hosted_url: string;

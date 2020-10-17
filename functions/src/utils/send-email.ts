@@ -14,7 +14,7 @@ export default function sendEmail(payload: SendEmailPayload) {
     }
 
     mailgun.messages().send({
-      from: "Krypto Pay",
+      from: "Peeerpay",
       to: payload.email,
       subject,
       template,
@@ -22,7 +22,6 @@ export default function sendEmail(payload: SendEmailPayload) {
       "v:service": payload.service,
       "v:customer": payload.service_customer_id,
       "v:tx_ref": payload.tx_ref,
-      "v:flw_ref": payload.flw_ref,
     });
   } catch (error) {
     console.error(new Error(error));

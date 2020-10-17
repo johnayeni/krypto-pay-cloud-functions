@@ -53,7 +53,7 @@ export default router.post(
           status: "payment_failed",
         });
         if (err) {
-          console.error(new Error(err));
+          console.error(new Error(`Failed payment: ${err.stack || err.message}}`));
         }
         response.status(500).end();
         return;
@@ -85,7 +85,7 @@ export default router.post(
 
       response.status(200).end();
     } catch (error) {
-      console.error(new Error(error));
+      console.error(new Error(`Failed webhook payment: ${error.stack || error.message}}`));
       response.status(500).end();
     }
   }

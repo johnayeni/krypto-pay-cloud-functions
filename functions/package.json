@@ -19,8 +19,7 @@
     "express-validator": "^6.5.0",
     "firebase-admin": "^8.12.1",
     "firebase-functions": "^3.7.0",
-    "mailgun-js": "^0.22.0",
-    "node-jose": "^1.1.4"
+    "mailgun-js": "^0.22.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.6",

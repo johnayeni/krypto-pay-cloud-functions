@@ -18,11 +18,9 @@ const validator = [
   check("serviceCustomerId").notEmpty(),
   check("amount")
     .toInt()
-    .isInt({ gt: 100, lt: 35000 })
+    .isInt({ gt: 99, lt: 35001 })
     .withMessage("Cannot process transactions less than ₦ 100 or greater than ₦35,000"),
-  check("country")
-    .isIn(["NG", "GH", "US", "KE"])
-    .withMessage("Cannot process transactions in this region yet"),
+  check("country").isIn(["NG"]).withMessage("Cannot process transactions in this region yet"),
   check("email")
     .normalizeEmail()
     .isEmail()
@@ -64,7 +62,7 @@ export default router.post(
       if (
         walletBalance?.data?.status !== "success" &&
         walletBalance?.data?.data?.available_balance >
-          Number(amount) + Number(validateCustomer.data.data.fee) + 20000
+          Number(amount) + Number(validateCustomer.data.data.fee) * 2
       ) {
         console.info("Insufficient funds");
         return response.status(400).json({ message: "Cannot process transactions at the moment" });
@@ -75,8 +73,8 @@ export default router.post(
           amount: `${amount + validateCustomer.data.data.fee}`,
           currency: "NGN",
         },
-        redirect_url: "https://krypto-pay.netlify.com/buy",
-        cancel_url: "https://krypto-pay.netlify.com/buy",
+        // redirect_url: "https://peeerpay.app/buy",
+        cancel_url: "https://peeerpay.app/buy",
         metadata: {
           email,
           service_customer_id: serviceCustomerId,
@@ -104,6 +102,7 @@ export default router.post(
         amount: bushaPayReponse.data.data.pricing.local.value,
         hosted_url: bushaPayReponse.data.data.hosted_url,
         code: bushaPayReponse.data.data.code,
+        country,
         payment_reference: "",
         email,
         fees: validateCustomer.data.data.fee,
