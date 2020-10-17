@@ -6,6 +6,10 @@ export function getCategoriesForMobile(categories: any[]) {
   return categories.filter((category) => category.label_name.toLowerCase() === "mobile number");
 }
 
+export function getCategoriesForBillerName(categories: any[], billerName: string) {
+  return categories.filter((category) => category.biller_name === billerName);
+}
+
 export function sanitizeCategories(categories: any[]) {
   return categories.map((category) => {
     const {

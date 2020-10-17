@@ -14,7 +14,7 @@ const router = express.Router();
 const validator = [
   check("billerCode").notEmpty(),
   check("itemCode").notEmpty(),
-  check("serviceName").notEmpty(),
+  check("serviceName").isIn(["AIRTIME"]),
   check("serviceCustomerId").notEmpty(),
   check("amount")
     .toInt()
@@ -73,7 +73,6 @@ export default router.post(
           amount: `${amount + validateCustomer.data.data.fee}`,
           currency: "NGN",
         },
-        // redirect_url: "https://peeerpay.app/buy",
         cancel_url: "https://peeerpay.app/buy",
         metadata: {
           email,

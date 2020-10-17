@@ -2,7 +2,7 @@ import * as express from "express";
 import flutterwave from "../utils/flutterwave";
 import {
   getCategoriesForCountry,
-  getCategoriesForMobile,
+  getCategoriesForBillerName,
   sanitizeCategories,
 } from "../utils/helpers";
 
@@ -16,7 +16,10 @@ export default router.get("/", async (_, response: express.Response) => {
     if (status !== "success" || !data)
       return response.status(400).json({ message: "Could not fetch categories" });
 
-    const filteredCategories = getCategoriesForMobile(getCategoriesForCountry(data, "NG"));
+    const filteredCategories = getCategoriesForBillerName(
+      getCategoriesForCountry(data, "NG"),
+      "AIRTIME"
+    );
 
     const sanitizedCategories = sanitizeCategories(filteredCategories);
 
