@@ -14,16 +14,18 @@ export default function sendEmail(payload: SendEmailPayload) {
     }
 
     mailgun.messages().send({
-      from: "Peeerpay",
+      from: "no@reply <payments@peeerpay.app>",
       to: payload.email,
       subject,
       template,
-      "v:amount": payload.amount,
-      "v:service": payload.service,
-      "v:customer": payload.service_customer_id,
-      "v:tx_ref": payload.tx_ref,
+      "h:X-Mailgun-Variables": {
+        amount: payload.amount,
+        service: payload.service,
+        customer: payload.service_customer_id,
+        tx_ref: payload.tx_ref,
+      },
     });
   } catch (error) {
-    console.error(new Error(error));
+    console.error(new Error(`Failed to send email: ${error.stack || error.message}`));
   }
 }
