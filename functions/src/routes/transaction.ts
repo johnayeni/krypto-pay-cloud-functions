@@ -22,7 +22,6 @@ const validator = [
     .withMessage("Cannot process transactions less than ₦ 49 or greater than ₦35,000"),
   check("country").isIn(["NG"]).withMessage("Cannot process transactions in this region yet"),
   check("email")
-    .normalizeEmail()
     .isEmail()
     .withMessage("Email is required for transaction to be processed properly"),
 ];
@@ -47,8 +46,10 @@ export default router.post(
         amount,
         serviceCustomerId,
         country,
-        email,
       } = request.body;
+      let { email } = request.body;
+
+      email = email.toLowerCase();
 
       const validateCustomer = await flutterwave.get(
         `/v3/bill-items/${itemCode}/validate?code=${billerCode}&customer=${serviceCustomerId}`
