@@ -18,8 +18,8 @@ const validator = [
   check("serviceCustomerId").notEmpty(),
   check("amount")
     .toInt()
-    .isInt({ gt: 99, lt: 35001 })
-    .withMessage("Cannot process transactions less than ₦ 100 or greater than ₦35,000"),
+    .isInt({ gt: 49, lt: 35001 })
+    .withMessage("Cannot process transactions less than ₦ 49 or greater than ₦35,000"),
   check("country").isIn(["NG"]).withMessage("Cannot process transactions in this region yet"),
   check("email")
     .normalizeEmail()
