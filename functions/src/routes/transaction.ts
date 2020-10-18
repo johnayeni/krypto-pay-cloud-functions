@@ -39,17 +39,11 @@ export default router.post(
     }
 
     try {
-      const {
-        billerCode,
-        itemCode,
-        serviceName,
-        amount,
-        serviceCustomerId,
-        country,
-      } = request.body;
-      let { email } = request.body;
+      const { billerCode, itemCode, serviceName, amount, country } = request.body;
+      let { email, serviceCustomerId } = request.body;
 
       email = email.toLowerCase();
+      serviceCustomerId = serviceCustomerId.replace(/\+/g, "");
 
       const validateCustomer = await flutterwave.get(
         `/v3/bill-items/${itemCode}/validate?code=${billerCode}&customer=${serviceCustomerId}`
